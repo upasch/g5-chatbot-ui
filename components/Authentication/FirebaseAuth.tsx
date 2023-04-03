@@ -39,7 +39,7 @@ const FirebaseAuth = ({ onSignInSuccess }: { onSignInSuccess?: () => void }) => 
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-screen">
-      <h1 className="text-white text-3xl font-bold mb-4">Log In</h1>
+      <h1 className="text-gray-300 text-2xl font-bold mb-3">Log in Chatbot UI</h1>
       <form className="bg-white p-6 rounded-lg shadow-lg" onSubmit={handleSignIn}>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
