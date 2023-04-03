@@ -37,3 +37,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .idea
+
+# dev and testing files
+_*
+__*

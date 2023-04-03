@@ -1,3 +1,4 @@
+//import React from 'react';
 import { Chat } from '@/components/Chat/Chat';
 import { Chatbar } from '@/components/Chatbar/Chatbar';
 import { Navbar } from '@/components/Mobile/Navbar';
@@ -34,6 +35,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import firebaseApp from '@/utils/app/firebaseConfig';
+import FirebaseAuth from '@/components/Authentication/FirebaseAuth';
+
+const auth = getAuth(firebaseApp);
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
@@ -617,7 +624,7 @@ const Home: React.FC<HomeProps> = ({
     }
   }, [serverSideApiKeyIsSet]);
 
-  return (
+   return (
     <>
       <Head>
         <title>Chatbot UI</title>
@@ -738,9 +745,78 @@ const Home: React.FC<HomeProps> = ({
         </main>
       )}
     </>
+    )
+};
+
+// FIREBASE LOGIN --------------------------------------------
+
+interface FbLoginProps {
+  serverSideApiKeyIsSet: boolean;
+  defaultModelId: string;
+}
+
+const FbLogin: React.FC<FbLoginProps> = ({
+  serverSideApiKeyIsSet,
+  defaultModelId,
+}) => {
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(!!user);
+  }, [user]);
+
+  return (
+    <div>
+      {isLoggedIn ? (
+        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={defaultModelId} />
+      ) : (
+        <FirebaseAuth />
+      )}
+    </div>
   );
 };
-export default Home;
+
+export default FbLogin;
+/*
+const fbLogin: React.FC = () => {
+
+  
+    const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        setUser(firebaseUser);
+      });
+  
+      return unsubscribe;
+    }, []);
+  
+    useEffect(() => {
+      setIsLoggedIn(!!user);
+    }, [user]);
+
+    return (
+      <div>
+        {isLoggedIn ? <Home serverSideApiKeyIsSet={true} defaultModelId="someModelId" /> : null}
+        {!isLoggedIn && <FirebaseAuth />}
+      </div>
+    );
+  };
+  
+  export default fbLogin;
+*/
+//export default Home; 
+
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const defaultModelId =
@@ -763,5 +839,4 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
         'promptbar',
       ])),
     },
-  };
-};
+}};
