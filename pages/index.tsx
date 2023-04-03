@@ -752,17 +752,24 @@ const Home: React.FC<HomeProps> = ({
 
 interface FbLoginProps {
   serverSideApiKeyIsSet: boolean;
-  defaultModelId: string;
+  defaultModelId?: OpenAIModelID | string;
 }
 
 const FbLogin: React.FC<FbLoginProps> = ({
   serverSideApiKeyIsSet,
-  defaultModelId,
+  defaultModelId = 'gpt-3.5-turbo',
 }) => {
-  
-  // If defaultModelId is an empty string, set it to 'gpt-3.5-turbo'
-  if (defaultModelId === '') {
-    defaultModelId = 'gpt-3.5-turbo';
+
+  let selectedModelId: OpenAIModelID;
+
+  if (typeof defaultModelId === 'string') {
+    if (Object.values(OpenAIModelID).includes(defaultModelId as OpenAIModelID)) {
+      selectedModelId = defaultModelId as OpenAIModelID;
+    } else {
+      selectedModelId = fallbackModelID;
+    }
+  } else {
+    selectedModelId = defaultModelId;
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -783,7 +790,7 @@ const FbLogin: React.FC<FbLoginProps> = ({
   return (
     <div>
       {isLoggedIn ? (
-        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={defaultModelId} />
+        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={selectedModelId} />
       ) : (
         <FirebaseAuth />
       )}
