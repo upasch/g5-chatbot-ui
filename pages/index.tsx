@@ -36,7 +36,7 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import firebaseApp from '@/utils/app/firebaseConfig';
 import FirebaseAuth from '@/components/Authentication/FirebaseAuth';
 
@@ -759,12 +759,18 @@ const FbLogin: React.FC<FbLoginProps> = ({
   serverSideApiKeyIsSet,
   defaultModelId,
 }) => {
-  const [user, setUser] = useState(null);
+  
+  // If defaultModelId is an empty string, set it to 'gpt-3.5-turbo'
+  if (defaultModelId === '') {
+    defaultModelId = 'gpt-3.5-turbo';
+  }
+
+  const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
+      setUser(firebaseUser === null ? null : firebaseUser);
     });
 
     return unsubscribe;
@@ -786,35 +792,6 @@ const FbLogin: React.FC<FbLoginProps> = ({
 };
 
 export default FbLogin;
-/*
-const fbLogin: React.FC = () => {
-
-  
-    const [user, setUser] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-        setUser(firebaseUser);
-      });
-  
-      return unsubscribe;
-    }, []);
-  
-    useEffect(() => {
-      setIsLoggedIn(!!user);
-    }, [user]);
-
-    return (
-      <div>
-        {isLoggedIn ? <Home serverSideApiKeyIsSet={true} defaultModelId="someModelId" /> : null}
-        {!isLoggedIn && <FirebaseAuth />}
-      </div>
-    );
-  };
-  
-  export default fbLogin;
-*/
 //export default Home; 
 
 
