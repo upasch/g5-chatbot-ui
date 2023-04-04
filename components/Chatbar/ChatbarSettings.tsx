@@ -53,7 +53,8 @@ export const ChatbarSettings: FC<Props> = ({
         }
       />
 
-      <Key apiKey={apiKey} onApiKeyChange={onApiKeyChange} />
+
     </div>
   );
 };
+//<Key apiKey={apiKey} onApiKeyChange={onApiKeyChange} /> //move this line above the </dive to set the OpenAI Key in the frontend

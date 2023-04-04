@@ -1,3 +1,4 @@
+//import React from 'react';
 import { Chat } from '@/components/Chat/Chat';
 import { Chatbar } from '@/components/Chatbar/Chatbar';
 import { Navbar } from '@/components/Mobile/Navbar';
@@ -36,6 +37,12 @@ import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import firebaseApp from '@/utils/app/firebaseConfig';
+import FirebaseAuth from '@/components/Authentication/FirebaseAuth';
+
+const auth = getAuth(firebaseApp);
+
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
   defaultModelId: OpenAIModelID;
@@ -51,7 +58,7 @@ const Home: React.FC<HomeProps> = ({
 
   const [apiKey, setApiKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [lightMode, setLightMode] = useState<'dark' | 'light'>('dark');
+  const [lightMode, setLightMode] = useState<'light' | 'dark'>('light');
   const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
 
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
@@ -623,7 +630,7 @@ const Home: React.FC<HomeProps> = ({
     }
   }, [serverSideApiKeyIsSet]);
 
-  return (
+   return (
     <>
       <Head>
         <title>Chatbot UI</title>
@@ -742,9 +749,62 @@ const Home: React.FC<HomeProps> = ({
         </main>
       )}
     </>
+    )
+};
+
+// FIREBASE LOGIN --------------------------------------------
+
+interface FbLoginProps {
+  serverSideApiKeyIsSet: boolean;
+  defaultModelId?: OpenAIModelID | string;
+}
+
+const FbLogin: React.FC<FbLoginProps> = ({
+  serverSideApiKeyIsSet,
+  defaultModelId = 'gpt-3.5-turbo',
+}) => {
+
+  let selectedModelId: OpenAIModelID;
+
+  if (typeof defaultModelId === 'string') {
+    if (Object.values(OpenAIModelID).includes(defaultModelId as OpenAIModelID)) {
+      selectedModelId = defaultModelId as OpenAIModelID;
+    } else {
+      selectedModelId = fallbackModelID;
+    }
+  } else {
+    selectedModelId = defaultModelId;
+  }
+
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser === null ? null : firebaseUser);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(!!user);
+  }, [user]);
+
+  return (
+    <div>
+      {isLoggedIn ? (
+        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={selectedModelId} />
+      ) : (
+        <FirebaseAuth />
+      )}
+    </div>
   );
 };
-export default Home;
+
+export default FbLogin;
+//export default Home; 
+
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const defaultModelId =
@@ -767,5 +827,4 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
         'promptbar',
       ])),
     },
-  };
-};
+}};
