@@ -38,47 +38,48 @@ const FirebaseAuth = ({ onSignInSuccess }: { onSignInSuccess?: () => void }) => 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-screen">
-      <h1 className="text-gray-300 text-2xl font-bold mb-3">Log in Chatbot UI</h1>
-      <form className="bg-white p-6 rounded-lg shadow-lg" onSubmit={handleSignIn}>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          Log In
-        </button>
-        {error && <p className="text-center text-red-500 mt-4">{error}</p>}
-        {success && (
-          <p className="text-center text-green-500 mt-4">
-            {success}
-          </p>
-        )}
-      </form>
+
+<div className="flex flex-col bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900/5 items-center justify-center h-screen w-screen">
+<form className="bg-white p-6 rounded-lg" style={{ boxShadow: '5px 25px 50px -12px rgba(0, 0, 0, 1)' }} onSubmit={handleSignIn}>
+    <h1 className="text-gray-800 text-2xl text-center font-bold mb-5">Log In to Chatbot UI</h1>
+    <div className="mb-5">
+      <label className="block text-gray-800 text-1xl mb-2" htmlFor="email">
+        E-Mail
+      </label>
+      <input
+        className="appearance-none border border-gray-600 rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+        type="email"
+        placeholder="your e-mail"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
     </div>
+    <div className="mb-5">
+      <label className="block text-gray-800 text-1xl mb-2" htmlFor="password">
+        Password
+      </label>
+      <input
+        className="appearance-none border border-gray-600 rounded w-full py-2 px-3 text-gray-800 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+        type="password"
+        placeholder="your password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </div>
+    <button
+      className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 w-full rounded border border-blue-700 focus:outline-none focus:shadow-outline"
+      type="submit"
+    >
+      Log In
+    </button>
+    {error && <p className="text-center text-red-500 mt-4">{error}</p>}
+    {success && (
+      <p className="text-center text-green-500 mt-4">
+        {success}
+      </p>
+    )}
+  </form>
+</div>
   ); 
 };
 

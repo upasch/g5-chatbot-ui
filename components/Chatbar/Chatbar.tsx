@@ -115,11 +115,11 @@ export const Chatbar: FC<Props> = ({
 
   return (
     <div
-      className={`fixed top-0 bottom-0 z-50 flex h-full w-[260px] flex-none flex-col space-y-2 bg-[#202123] p-2 transition-all sm:relative sm:top-0`}
+      className={`fixed top-0 bottom-0 z-50 flex h-full w-[260px] flex-none flex-col space-y-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 p-2 transition-all sm:relative sm:top-0`}
     >
       <div className="flex items-center">
         <button
-          className="flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-gray-500/10"
+          className="flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-blue-800/70"
           onClick={() => {
             onNewConversation();
             setSearchTerm('');
@@ -130,7 +130,7 @@ export const Chatbar: FC<Props> = ({
         </button>
 
         <button
-          className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-gray-500/10"
+          className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-blue-800/70"
           onClick={() => onCreateFolder(t('New folder'))}
         >
           <IconFolderPlus size={18} />

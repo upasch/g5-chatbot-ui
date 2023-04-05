@@ -29,7 +29,7 @@
 }
 
 html {
-  background: #202123;
+  background-image: url(../assets/abstract_background.jpg);
 }
 
 @media (max-width: 720px) {

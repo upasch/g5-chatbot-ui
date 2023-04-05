@@ -33,7 +33,7 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
@@ -763,6 +763,55 @@ const FbLogin: React.FC<FbLoginProps> = ({
   serverSideApiKeyIsSet,
   defaultModelId = 'gpt-3.5-turbo',
 }) => {
+  const auth = getAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [selectedModelId, setSelectedModelId] = useState<OpenAIModelID>(fallbackModelID);
+  const selectModelId = useCallback(() => {
+    if (typeof defaultModelId === 'string') {
+      if (Object.values(OpenAIModelID).includes(defaultModelId as OpenAIModelID)) {
+        return defaultModelId as OpenAIModelID;
+      } else {
+        return fallbackModelID;
+      }
+    } else {
+      return defaultModelId;
+    }
+  }, [defaultModelId]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return unsubscribe;
+  }, [auth]);
+
+  useEffect(() => {
+    setSelectedModelId(selectModelId());
+  }, [selectModelId, defaultModelId]);
+
+  return (
+    <div>
+      {user ? (
+        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={selectedModelId} />
+      ) : (
+        <FirebaseAuth onSignInSuccess={() => setUser(auth.currentUser)} />
+      )}
+    </div>
+  );
+};
+
+export default FbLogin;
+
+/*
+interface FbLoginProps {
+  serverSideApiKeyIsSet: boolean;
+  defaultModelId?: OpenAIModelID | string;
+}
+
+const FbLogin: React.FC<FbLoginProps> = ({
+  serverSideApiKeyIsSet,
+  defaultModelId = 'gpt-3.5-turbo',
+}) => {
 
   let selectedModelId: OpenAIModelID;
 
@@ -803,6 +852,7 @@ const FbLogin: React.FC<FbLoginProps> = ({
 };
 
 export default FbLogin;
+*/
 //export default Home; 
 
 
