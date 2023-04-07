@@ -29,8 +29,12 @@
 }
 
 html {
-  background-image: url(../assets/abstract_background.jpg);
+  background-image: url(../assets/robotic_AI_art_woman.jpg);
+  background-size:     cover;                 
+  background-repeat:   no-repeat;
+  background-position: center center;   /* optional, center the image */
 }
+
 
 @media (max-width: 720px) {
   pre {
