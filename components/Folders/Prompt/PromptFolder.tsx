@@ -72,7 +72,7 @@ export const PromptFolder: FC<Props> = ({
   };
 
   const highlightDrop = (e: any) => {
-    e.target.style.background = '#343541';
+    e.target.style.background = '#141c32';
   };
 
   const removeHighlight = (e: any) => {
@@ -99,7 +99,7 @@ export const PromptFolder: FC<Props> = ({
     <>
       <div className="relative flex items-center">
         {isRenaming ? (
-          <div className="flex w-full items-center gap-3 bg-[#343541]/90 p-3">
+          <div className="flex w-full items-center gap-3 bg-[#141c32]/90 p-3">
             {isOpen ? (
               <IconCaretDown size={18} />
             ) : (

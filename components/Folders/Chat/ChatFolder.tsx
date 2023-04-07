@@ -76,7 +76,7 @@ export const ChatFolder: FC<Props> = ({
   };
 
   const highlightDrop = (e: any) => {
-    e.target.style.background = '#343541';
+    e.target.style.background = '#141c32';
   };
 
   const removeHighlight = (e: any) => {
