@@ -39,7 +39,7 @@ const FirebaseAuth = ({ onSignInSuccess }: { onSignInSuccess?: () => void }) => 
 
   return (
 
-<div className="flex flex-col bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900/5 items-center justify-center h-screen w-screen">
+<div className="flex flex-col bg-blue-950 items-center justify-center h-screen w-screen">
 <form className="bg-white p-6 rounded-lg" style={{ boxShadow: '5px 25px 50px -12px rgba(0, 0, 0, 1)' }} onSubmit={handleSignIn}>
     <h1 className="text-gray-800 text-2xl text-center font-bold mb-5">Log In to Chatbot UI</h1>
     <div className="mb-5">
