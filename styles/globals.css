@@ -29,12 +29,17 @@
 }
 
 html {
+  /*
   background-image: url(../assets/robotic_AI_art_woman_extended.jpg);
   background-size:     cover;                 
   background-repeat:   no-repeat;
   background-position: center center;   /* optional, center the image */
 }
-
+.background-image {
+  background-image: url(../assets/robotic_AI_art_woman_extended.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 @media (max-width: 720px) {
   pre {
@@ -45,3 +50,42 @@ html {
 pre:has(div.codeblock) {
   padding: 0;
 }
+
+
+/* SUPABASE CSS */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  --colors-inputText: #fff; /* Text color for Superbase Auth Widget */ 
+  --colors-brand:rgb(29 78 216);
+  --colors-brandAccent: rgb(15, 60, 182);
+}
+
+  /* Auth */
+  .auth-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .auth-widget > .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #444444;
+    text-transform: none !important;
+    transition: all 0.2s ease;
+  }
+  
+  .auth-widget .button:hover {
+    background-color: rgb(29 78 216);
+  }
+  
+  .auth-widget .button > .loader,
+  .account .button > .loader {
+    width: 17px;
+    animation: spin 1s linear infinite;
+    filter: invert(1);
+  }

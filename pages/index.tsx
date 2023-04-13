@@ -33,15 +33,22 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
-import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import firebaseApp from '@/utils/app/firebaseConfig';
-import FirebaseAuth from '@/components/Authentication/FirebaseAuth';
 
-const auth = getAuth(firebaseApp);
+// Supabase Auth helpers
+//import supabase from '@/utils/app/supabaseConfig';
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+import { Auth } from '@supabase/auth-ui-react'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+
+import LoginPage from '../components/Authentication/Account'
+import Account from '../components/Authentication/Account';
+
+
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
@@ -53,6 +60,11 @@ const Home: React.FC<HomeProps> = ({
   defaultModelId,
 }) => {
   const { t } = useTranslation('chat');
+  const supabase = useSupabaseClient();
+  const session = useSession();
+
+
+  
 
   // STATE ----------------------------------------------
 
@@ -68,8 +80,7 @@ const Home: React.FC<HomeProps> = ({
   const [folders, setFolders] = useState<Folder[]>([]);
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation>();
+  const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [currentMessage, setCurrentMessage] = useState<Message>();
 
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
@@ -633,7 +644,7 @@ const Home: React.FC<HomeProps> = ({
    return (
     <>
       <Head>
-        <title>Chatbot UI</title>
+        <title>Gruppe5 Chatbot UI</title>
         <meta name="description" content="ChatGPT but better." />
         <meta
           name="viewport"
@@ -752,20 +763,25 @@ const Home: React.FC<HomeProps> = ({
     )
 };
 
-// FIREBASE LOGIN --------------------------------------------
 
-interface FbLoginProps {
+// SUPABASE LOGIN --------------------------------------------
+
+interface SbLoginProps {
   serverSideApiKeyIsSet: boolean;
   defaultModelId?: OpenAIModelID | string;
 }
 
-const FbLogin: React.FC<FbLoginProps> = ({
+const SbLogin: React.FC<SbLoginProps> = ({
   serverSideApiKeyIsSet,
   defaultModelId = 'gpt-3.5-turbo',
 }) => {
-  const auth = getAuth();
-  const [user, setUser] = useState<User | null>(null);
+
+  const session = useSession()
+  const supabase = useSupabaseClient()
+
+  //const [user, setUser] = useState<User | null>(null);
   const [selectedModelId, setSelectedModelId] = useState<OpenAIModelID>(fallbackModelID);
+
   const selectModelId = useCallback(() => {
     if (typeof defaultModelId === 'string') {
       if (Object.values(OpenAIModelID).includes(defaultModelId as OpenAIModelID)) {
@@ -779,28 +795,47 @@ const FbLogin: React.FC<FbLoginProps> = ({
   }, [defaultModelId]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-    });
-    return unsubscribe;
-  }, [auth]);
+    setSelectedModelId(selectModelId());
+  }, [selectModelId, defaultModelId]);
 
   useEffect(() => {
     setSelectedModelId(selectModelId());
   }, [selectModelId, defaultModelId]);
 
   return (
-    <div>
-      {user ? (
-        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={selectedModelId} />
-      ) : (
-        <FirebaseAuth onSignInSuccess={() => setUser(auth.currentUser)} />
+    <>
+      {/* Conditionally render the div element based on whether the user is not logged in */}
+      {!session && (
+        <div className="flex flex-col bg-blue-950 background-image items-center justify-center h-screen w-screen">
+          <h1 className="text-gray-300/50 text-3xl text-center font-bold mb-5">
+            Welcome to Chatbot UI
+          </h1>
+          <Auth
+            providers={[]}
+            supabaseClient={supabase}
+            localization={{
+              variables: {
+                sign_in: { password_input_placeholder: 'Your strong password' },
+                sign_up: { link_text: '' },
+              },
+            }}
+            appearance={{ theme: ThemeSupa }}
+            theme="default"
+            redirectTo="/Account"
+          />
+        </div>
       )}
-    </div>
+      {/* Render the LoginPage component if the user is logged in */}
+      {/*session && <LoginPage session={session} /> */}
+      {/* Render the Home component outside of the div element */}
+      {session && (
+        <Home serverSideApiKeyIsSet={serverSideApiKeyIsSet} defaultModelId={selectedModelId} />
+      )}
+    </>
   );
 };
 
-export default FbLogin;
+export default SbLogin;
 
 //export default Home; 
 

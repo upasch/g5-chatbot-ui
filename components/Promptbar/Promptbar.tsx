@@ -12,7 +12,8 @@ import { PromptFolders } from '../Folders/Prompt/PromptFolders';
 import { Search } from '../Sidebar/Search';
 import { PromptbarSettings } from './PromptbarSettings';
 import { Prompts } from './Prompts';
-import { getAuth, signOut } from 'firebase/auth';
+
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
 interface Props {
   prompts: Prompt[];
@@ -76,6 +77,7 @@ export const Promptbar: FC<Props> = ({
     e.target.style.background = 'none';
   };
 
+  /* Firebase logout
   const handleLogout = () => {
     const auth = getAuth();
     signOut(auth)
@@ -86,6 +88,23 @@ export const Promptbar: FC<Props> = ({
         // An error happened.
       });
   };
+  */
+
+
+
+// Supabase logout
+const session = useSession()
+const supabase = useSupabaseClient()
+
+const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.log('Error signing out:', error.message);
+  } else {
+    console.log('User state:', session);
+  } 
+}
+
 
   useEffect(() => {
     if (searchTerm) {
