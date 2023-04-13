@@ -3,10 +3,8 @@ import { useTranslation } from 'next-i18next';
 import { IconExternalLink } from '@tabler/icons-react';
 import { FC } from 'react';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Account from '@/../../components/Authentication/Account';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
-import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+
 
 interface Props {
   model: OpenAIModel;
@@ -59,8 +57,6 @@ export const ModelSelect: FC<Props> = ({
           ))}
         </select>
       </div>
-      {accountLoaded && session && <Account session={session} />}
-
       {/*
        <div className="w-full mt-3 text-left text-neutral-700 dark:text-neutral-400 flex items-center">
         <a href="https://platform.openai.com/account/usage" target="_blank" className="flex items-center">
